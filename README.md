@@ -114,9 +114,9 @@ Copy the output and use it in environment variables for CircleCI secrets.
 
 ### Step 7. 🤝 Connect Project to CircleCI and Set Environment Variables
 1. **Open CircleCI** and go to the **Projects** section.
-   - Create Project -> Build, test & deply your software application
+   - **Create Project** -> **Build, test & deply your software application**
    - Give any project name: `LLMOPS`
-   - Click Setup a pipeline
+   - Click **Setup a pipeline**
    - Give any pipeline name `build-and-test`
    - Next you need to Choose the Github Repo
 3. **Connect CircleCI to your GitHub account:**

@@ -9,6 +9,8 @@ Users can explore detailed information about the recognized celebrity and ask fo
 4. **🧠 LLM Processing**: Detected face is passed to the LLM 🦙 `llama-4-maverick-17b-128e-instruct` for identification.
 5. **📜 LLM Response**: Once identified, the app displays details about the celebrity.
 6. **🗣️ Interaction**: User can ask any question (e.g., family, marriage, etc) and LLM generates contextual answers based on the celebrity's profile.
+7. **🐳 Deployment**: Deploying on a GKE cluster & using GAR for storing docker images. 
+8. **🌐 Github**: Github servers as SCM & code version for CircleCI to automate CI/CD workflow.
 
 ## 📦 Installating & Running Locally
 - **Clone this repo & CD Celebrity-Detector :**

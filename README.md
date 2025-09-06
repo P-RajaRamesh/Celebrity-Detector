@@ -53,16 +53,29 @@ Check that you have done the following before moving to the CircleCI deployment 
 Go to your GCP account and enable all the following APIs:
 **Navigation:** In the left pane -> **APIs & Services** -> Click ➕ **Enable APIs and services** <br/>
 Enable the following:
-- Kubernetes Engine API  
-- Container Registry API  
-- Compute Engine API  
-- Cloud Build API  
-- Cloud Storage API  
-- IAM API
+- ✅Kubernetes Engine API  
+- ✅Container Registry API  
+- ✅Compute Engine API  
+- ✅Cloud Build API  
+- ✅Cloud Storage API  
+- ✅IAM API
 
 ---
 
-### Step 3. 🛠️ Create GKE Cluster 💠 and Artifact Registry 📒
+### Step 3. 🧱 Create a firewall rule in Google Cloud Console
+  - Search for firewall
+  - Create a firewall rule
+  - Name the firewall : `study-buddy-ai-firewall`
+  - Direction of traffic : Ingress
+  - Action on match : Allow
+  - Targets : All instances in the network
+  - Source filter : IPv4 ranges
+  - Source IPv4 ranges : 0.0.0.0/0
+  - Protocols and ports : Allow All
+
+---
+
+### Step 4. 🛠️ Create GKE Cluster 💠 and Artifact Registry 📒
 1. **💠 Create GKE Cluster:**
    - Go to your GCP Console and search for **Kubernetes Engine** -> **Clusters**.
    - Create a 🆕 cluster with any name: `celebrity-cluster`
@@ -78,7 +91,7 @@ Enable the following:
 
 ---
 
-### Step 4. 👨‍🔧 Create a Service Account and Configure Access
+### Step 5. 👨‍🔧 Create a Service Account and Configure Access
 1. Goto **IAM & Admin** -> **Service accounts** -> ➕ **Create a Service Account**
 2. Enter any service name and **Assign the following roles:**
    - ✅ Storage Object Admin  
@@ -94,7 +107,7 @@ Enable the following:
 
 ---
 
-### Step 5. 🔐 Convert `gcp-key.json` to Base64
+### Step 6. 🔐 Convert `gcp-key.json` to Base64
 Open git bash terminal in VSCode and browse to your project directory, run:
 ```bash
 cat gcp-key.json | base64 -w 0
@@ -103,24 +116,22 @@ Copy the output and use it in environment variables for CircleCI secrets.
 
 ---
 
-### Step 6. 🛠️ Set Up CircleCI Configuration file
-1. **Create the CircleCI config file:** <br/>
-   In your project root directory, create the following file: ```.circleci/config.yml```
-2. **Get the code** for config file from my GitHub repository: `https://github.com/P-RajaRamesh/Celebrity-Detector.git`
-3. **Set up a CircleCI account:**
-   - After creating the account, connect it to **GitHub** to access your repositories.
+### Step 7. 🛠️ Set Up CircleCI Configuration file
+- In your project root directory, create the following file: ```.circleci/config.yml```
+- Get the code for `config.yml` file from my GitHub repository: `https://github.com/P-RajaRamesh/Celebrity-Detector.git`
+- Create a CircleCI account & Create one Organisation in it. - (*Only for 1st time*)
 
 ---
 
-### Step 7. 🤝 Connect Project to CircleCI and Set Environment Variables
-1. **Open CircleCI** and go to the **Projects** section.
+### Step 8. 🤝 Connect Github Project to CircleCI and Set Environment Variables
+1. **Open CircleCI** and goto the **Projects** section.
    - **Create Project** -> **Build, test & deply your software application**
    - Give any project name: `LLMOPS`
    - Click **Setup a pipeline**
    - Give any pipeline name `build-and-test`
    - Next you need to Choose the Github Repo
 3. **Connect CircleCI to your GitHub account:**
-   - Authorize CircleCI to access your GitHub repositories.
+   - Authorize CircleCI to access your GitHub repositories. - (*Only for 1st time*)
 4. **Select your project repository**:
    - CircleCI will automatically detect the `.circleci/config.yml` file.
 5. **Configure project settings:**
@@ -128,37 +139,37 @@ Copy the output and use it in environment variables for CircleCI secrets.
 6. Come back to you project created `LLMOPS`
    - Click on ··· -> Select **Project settings** -> **Environment Variables** section
 5. **Add the following environment variables**:
-   - ✅`GCLOUD_SERVICE_KEY` — your Base64-encoded GCP key which you have copied in **Step 5**.
+   - ✅`GCLOUD_SERVICE_KEY` — your Base64-encoded GCP key which you have copied in **Step 6**.
    - ✅`GOOGLE_PROJECT_ID` — your GCP project ID  
    - ✅`GKE_CLUSTER` — your GKE cluster name `celebrity-cluster` 
    - ✅`GOOGLE_COMPUTE_REGION` — your compute region
 
 ---
 
-### Step 8. 🗝️ Set Up LLMOps Secrets in GKE using kubectl
+### Step 9. 🗝️ Set Up LLMOps Secrets in GKE using kubectl
 - Click your cluster `celebrity-cluster` -> open terminal.
-- Run the below command to connect with your cluster if not already ran automatically
+- Run the below command to connect with your cluster if not populated automatically
 ```
 gcloud container clusters get-credentials <YOUR-CLUSTER-NAME> \
 --region us-central1 \
 --project <YOUR-PROJECT-ID>
 ```
-- Run the below command to inject the **GROQ_API_KEY** secrets
+- Run the below command to inject the **GROQ_API_KEY** 
 ```
 kubectl create secret generic llmops-secrets \
 --from-literal=GROQ_API_KEY="<YOUR-API-KEY>"
 ```
 ---
 
-### Step 9. ⚡Trigger CircleCI Pipeline
-- Goto CIrcleCI -> CLick your Project `LLMOPS` -> Select **Pipeline** section
+### Step 10. ⚡Trigger CircleCI Pipeline
+- Goto **CircleCI** -> CLick your Project `LLMOPS` -> Select **Pipeline** section
 - Filter with you `LLMOPS` project & `main` branch
 - Click **Trigger Pipeline** on top right corner.
 - From now on, the pipeline will be **automatically triggered** on each `git push` to the repository.
 
 ---
 
-### Step 10. 👨‍💻 Access the application
+### Step 11. 👨‍💻 Access the application
 - Goto **Kubernetes Engine** -> **Workloads**
 - Click `llmops-app` and scroll down to see the **Exposing services**.
 - Click **External endpoints** link ↗ and access you application.
